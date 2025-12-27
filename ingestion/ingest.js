@@ -13,7 +13,6 @@ const path = require('path');
    CONFIGURATION
 ================================ */
 
-const SERVICE_ACCOUNT = require('./keys/findmobo-200404-firebase-adminsdk-fbsvc-612ce7acd0.json');
 const CSV_FILE = './data/India_Air_Quality_Risk.csv';
 const COLLECTION_NAME = 'air_quality';
 
@@ -21,11 +20,13 @@ const COLLECTION_NAME = 'air_quality';
 const TODAY = new Date().toISOString().split('T')[0];
 
 /* ===============================
-   FIREBASE INIT
+   FIREBASE INIT (GitHub-safe)
 ================================ */
 
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
 admin.initializeApp({
-  credential: admin.credential.cert(SERVICE_ACCOUNT)
+  credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
@@ -46,16 +47,30 @@ function classifyRisk(score) {
 ================================ */
 
 async function ingestCSV() {
+  if (!fs.existsSync(CSV_FILE)) {
+    console.error(`❌ CSV file not found: ${CSV_FILE}`);
+    process.exit(1);
+  }
+
   const batch = db.batch();
   let rowCount = 0;
 
   console.log('🚀 Starting ingestion...');
 
+  // Date-level timestamp (important for UI)
+  const dateDocRef = db.collection(COLLECTION_NAME).doc(TODAY);
+  await dateDocRef.set(
+    {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      source: 'Sentinel-5P'
+    },
+    { merge: true }
+  );
+
   fs.createReadStream(path.resolve(CSV_FILE))
     .pipe(csv())
     .on('data', (row) => {
       try {
-        // Adjust field names if needed
         const location =
           row.ADM2_NAME ||
           row.ADM1_NAME ||
@@ -64,10 +79,7 @@ async function ingestCSV() {
 
         const rawScore = parseFloat(row.mean);
 
-        if (!location || isNaN(rawScore)) {
-          console.warn('⚠️ Skipping invalid row:', row);
-          return;
-        }
+        if (!location || isNaN(rawScore)) return;
 
         const score = Math.round(rawScore);
         const risk = classifyRisk(score);
@@ -79,9 +91,9 @@ async function ingestCSV() {
           .doc(location);
 
         batch.set(docRef, {
-          location: location,
-          score: score,
-          risk: risk,
+          location,
+          score,
+          risk,
           date: TODAY,
           source: 'Sentinel-5P',
           updatedAt: admin.firestore.FieldValue.serverTimestamp()
