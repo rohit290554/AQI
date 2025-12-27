@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>Air Quality Risk Heatmap – India</title>
+  <meta name="description" content="Satellite-based daily air quality risk assessment across Indian districts using remote sensing data." />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Glass Header -->
+  <header class="header glass">
+    <div class="header-content">
+      <h1>🌍 Air Quality Risk – India</h1>
+      <p>Satellite-based daily air pollution risk assessment</p>
+      <p class="author">Developed by <b>rohit290554</b> using GEE & Firebase</p>
+    </div>
+
+    <button class="readme-btn" onclick="toggleReadme()">📘 README</button>
+  </header>
+
+  <!-- Map Wrapper -->
+  <div class="map-wrapper">
+    <div id="map"></div>
+
+    <!-- Legend (Glass) -->
+    <div class="legend glass">
+      <h4>Air Quality Risk</h4>
+      <div><span class="low"></span> Low</div>
+      <div><span class="moderate"></span> Moderate</div>
+      <div><span class="high"></span> High</div>
+      <div><span class="severe"></span> Severe</div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading glass">
+      Loading air quality data…
+    </div>
+  </div>
+
+  <!-- README PANEL -->
+  <div id="readme-panel" class="readme-panel glass">
+    <button class="close-btn" onclick="toggleReadme()">✖</button>
+
+    <h2>📘 Project README</h2>
+
+    <p><b>Air Quality Risk – India</b> is a satellite-based air pollution risk
+    visualization platform using remote sensing data.</p>
+
+    <h3>🔧 Tech Stack</h3>
+    <ul>
+      <li>Google Earth Engine (Sentinel-5P)</li>
+      <li>Firebase Firestore</li>
+      <li>Leaflet.js</li>
+      <li>Firebase Hosting</li>
+    </ul>
+
+    <h3>🧠 Methodology</h3>
+    <p>
+      NO₂, SO₂, CO and Aerosol indices are normalized and combined
+      into a district-level air quality risk score.
+    </p>
+
+    <h3>📍 Data Source</h3>
+    <p>Sentinel-5P (ESA Copernicus Program)</p>
+
+    <h3>⚠ Disclaimer</h3>
+    <p>This is a research & visualization tool. Not a replacement for CPCB data.</p>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- App Script -->
+  <script type="module" src="app.js"></script>
+
+  <!-- README Toggle Script -->
+  <script>
+    function toggleReadme() {
+      document.getElementById("readme-panel").classList.toggle("open");
+    }
+  </script>
+
+</body>
+</html>

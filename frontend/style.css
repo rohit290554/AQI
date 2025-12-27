@@ -1,0 +1,172 @@
+:root {
+  --header-height: 90px;
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", Arial, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+}
+
+/* GLASS EFFECT */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+/* HEADER */
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.header-content p {
+  margin: 2px 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.author {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* README BUTTON */
+.readme-btn {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.readme-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+/* MAP */
+.map-wrapper {
+  position: relative;
+  height: calc(100vh - var(--header-height));
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* LEGEND */
+.legend {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  z-index: 1000;
+}
+
+.legend span {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin-right: 6px;
+  border-radius: 3px;
+}
+
+.low { background: #2ecc71; }
+.moderate { background: #f1c40f; }
+.high { background: #e67e22; }
+.severe { background: #e74c3c; }
+
+/* LOADING */
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 1100;
+}
+
+/* README PANEL */
+.readme-panel {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 400px;
+  height: 100vh;
+  padding: 20px;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  z-index: 2000;
+}
+
+.readme-panel.open {
+  right: 0;
+}
+
+.close-btn {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 18px;
+  float: right;
+  cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header-content h1 {
+    font-size: 18px;
+  }
+
+  .readme-panel {
+    width: 100%;
+  }
+
+  .legend {
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+/* README TEXT COLOR (Purple Theme) */
+.readme-panel {
+  color: #b388ff; /* soft purple for body text */
+}
+
+.readme-panel h2,
+.readme-panel h3 {
+  color: #d1b3ff; /* brighter purple for headings */
+}
+
+.readme-panel b {
+  color: #e0c7ff;
+}
+
+.readme-panel ul li {
+  color: #caa7ff;
+}
