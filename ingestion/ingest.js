@@ -10,18 +10,13 @@ const admin = require('firebase-admin');
 const path = require('path');
 
 /* ===============================
-   CONFIGURATION
-================================ */
-
-const CSV_FILE = './data/India_Air_Quality_Risk.csv';
-const COLLECTION_NAME = 'air_quality';
-
-// Use today's date (ISO)
-const TODAY = new Date().toISOString().split('T')[0];
-
-/* ===============================
    FIREBASE INIT (GitHub-safe)
 ================================ */
+
+if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+  console.error('❌ FIREBASE_SERVICE_ACCOUNT not set');
+  process.exit(1);
+}
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
@@ -117,3 +112,4 @@ async function ingestCSV() {
 ================================ */
 
 ingestCSV();
+
