@@ -26,13 +26,11 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: |
-          cd ingestion
-          npm install
+        working-directory: ingestion
+        run: npm install
 
       - name: Run ingestion
-        run: |
-          cd ingestion
-          node ingest.js
+        working-directory: ingestion
+        run: node ingest.js
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
