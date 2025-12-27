@@ -4,10 +4,25 @@
  * Purpose: Air Quality Risk Heatmap
  */
 
+'use strict';
+
 const fs = require('fs');
 const csv = require('csv-parser');
 const admin = require('firebase-admin');
 const path = require('path');
+
+/* ===============================
+   CONSTANTS
+================================ */
+
+// CSV path (repo: ingestion/data/India_Air_Quality_Risk.csv)
+const CSV_FILE = path.join(__dirname, 'data', 'India_Air_Quality_Risk.csv');
+
+// Firestore root collection
+const COLLECTION_NAME = 'air_quality_risk';
+
+// Date key: YYYY-MM-DD
+const TODAY = new Date().toISOString().split('T')[0];
 
 /* ===============================
    FIREBASE INIT (GitHub-safe)
@@ -42,17 +57,16 @@ function classifyRisk(score) {
 ================================ */
 
 async function ingestCSV() {
+  console.log('📄 CSV path:', CSV_FILE);
+
   if (!fs.existsSync(CSV_FILE)) {
     console.error(`❌ CSV file not found: ${CSV_FILE}`);
     process.exit(1);
   }
 
-  const batch = db.batch();
-  let rowCount = 0;
-
   console.log('🚀 Starting ingestion...');
 
-  // Date-level timestamp (important for UI)
+  // Date-level document (for UI / metadata)
   const dateDocRef = db.collection(COLLECTION_NAME).doc(TODAY);
   await dateDocRef.set(
     {
@@ -62,7 +76,10 @@ async function ingestCSV() {
     { merge: true }
   );
 
-  fs.createReadStream(path.resolve(CSV_FILE))
+  let rowCount = 0;
+  const batch = db.batch();
+
+  fs.createReadStream(CSV_FILE)
     .pipe(csv())
     .on('data', (row) => {
       try {
@@ -104,6 +121,10 @@ async function ingestCSV() {
       await batch.commit();
       console.log(`✅ Ingestion complete: ${rowCount} records added.`);
       process.exit(0);
+    })
+    .on('error', (err) => {
+      console.error('❌ Stream error:', err);
+      process.exit(1);
     });
 }
 
