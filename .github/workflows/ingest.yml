@@ -14,17 +14,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Show repo structure (debug)
+        run: |
+          pwd
+          ls -la
+          ls -la ingestion
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Install dependencies
-        working-directory: ingestion
-        run: npm install
+        run: |
+          cd ingestion
+          npm install
 
       - name: Run ingestion
-        working-directory: ingestion
+        run: |
+          cd ingestion
+          node ingest.js
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-        run: node ingest.js
