@@ -19,7 +19,7 @@ const path = require('path');
 const CSV_FILE = path.join(__dirname, 'data', 'India_Air_Quality_Risk.csv');
 
 // Firestore root collection
-const COLLECTION_NAME = 'air_quality_risk';
+const COLLECTION_NAME = 'air_quality';
 
 // Date key: YYYY-MM-DD
 const TODAY = new Date().toISOString().split('T')[0];
@@ -133,3 +133,4 @@ async function ingestCSV() {
 ================================ */
 
 ingestCSV();
+
