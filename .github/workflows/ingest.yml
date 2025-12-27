@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ingestion
-        run: npm ci   # or npm install
+        run: npm install
 
       - name: Run ingestion
         working-directory: ingestion
