@@ -1,0 +1,44 @@
+name: CSV → Firestore Ingestion
+
+on:
+  push:
+    paths:
+      - ingestion/data/India_Air_Quality_Risk.csv
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Debug: show repo structure (very useful)
+      - name: Debug repo structure
+        run: |
+          echo "ROOT:"
+          ls -la
+          echo "INGESTION:"
+          ls -la ingestion
+
+      # 3️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 4️⃣ Install dependencies
+      - name: Install dependencies
+        run: |
+          cd ingestion
+          npm install
+
+      # 5️⃣ Run ingestion script
+      - name: Run CSV ingestion
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          cd ingestion
+          node ingest.js
